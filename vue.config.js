@@ -4,9 +4,12 @@ module.exports = {
     port: 3000,
     proxy: {
       '/local': {
-        target: "http://localhost:8082",
+        target: "http://sunui.vaiwan.com",
         ws: true,
-        changeOrigin: true
+        changeOrigin: true,
+        pathRewrite: {
+          "^/local": "" // 这个意思就是以api开头的，定向到哪里, 如果你的后边还有路径的话， 会自动拼接上
+        }
       },
       '/open-apis': {
         target: 'https://open.feishu.cn',
