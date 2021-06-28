@@ -7,6 +7,7 @@
  * 引入资源
  */
 import { getAccessToken, getLoginData, getUserData } from "../lark.service";
+import { ssoLogin } from '../system.service';
 import { mapGetters } from "vuex";
 
 export default {
@@ -66,14 +67,19 @@ export default {
                     "Content-Type": "application/json; charset=utf-8",
                   }
                 ).then((res3) => {
-                  console.log(res3);
                   this.userNo = res3.data.data.user.employee_no;
+                  ssoLogin({name: this.userNo}).then(res => {
+                    console.log(res)
+                    if(res.data.code === '0') {
+                      window.location.href = "http://jrhl.vaiwan.com/seeyon/main.do?method=login&ticket=" + res.data.result +"&ssoFrom=samplesso&UserAgentFrom=pc"
+                    }
+                  })
                 });
               } else {
                 this.$message.error(
                   "系统发生错误，请联系管理员，错误代码: " + res2.data.msg
                 );
-                window.location.href = "http://127.0.0.1:3000";
+                window.location.href = "http://sun.vaiwan.com";
               }
             });
           } else {
