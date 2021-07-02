@@ -7,7 +7,7 @@
  * 引入资源
  */
 import { getAccessToken, getLoginData, getUserData } from "../lark.service";
-import { ssoLogin } from '../system.service';
+import { ssoLogin } from "../system.service";
 import { mapGetters } from "vuex";
 
 export default {
@@ -29,9 +29,12 @@ export default {
     checkUrlParam: function () {
       // 获取授权码
       let code = this.$route.query.code;
+      // 如果授权码不存在，则跳转到授权页面
       if (code == undefined) {
         this.jumpVerifyID();
       } else {
+
+        // 获取用户数据
         // 请求应用token
         getAccessToken(
           this.URL.APP_ACCESS_TOKEN_URL,
@@ -68,12 +71,15 @@ export default {
                   }
                 ).then((res3) => {
                   this.userNo = res3.data.data.user.employee_no;
-                  ssoLogin({name: this.userNo}).then(res => {
-                    console.log(res)
-                    if(res.data.code === '0') {
-                      window.location.href = "http://jrhl.vaiwan.com/seeyon/main.do?method=login&ticket=" + res.data.result +"&ssoFrom=samplesso&UserAgentFrom=pc"
+                  ssoLogin({ name: this.userNo }).then((res) => {
+                    console.log(res);
+                    if (res.data.code === "0") {
+                      window.location.href =
+                        "http://jrhl.vaiwan.com/seeyon/main.do?method=login&ticket=" +
+                        res.data.result +
+                        "&ssoFrom=samplesso&UserAgentFrom=pc";
                     }
-                  })
+                  });
                 });
               } else {
                 this.$message.error(
